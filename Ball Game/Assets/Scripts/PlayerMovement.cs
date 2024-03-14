@@ -21,11 +21,19 @@ public class PlayerMovement : MonoBehaviour
 
     bool moveCooldown = false;
 
-    int currentWall = 2;
+    bool isRunningRight = false;
+    bool isRunningLeft = false;
+
+    bool inMidAir = false;
+
+    bool trackPlayer = false;
+
+    public int currentWall = 2;
 
     public int laneSwapSpeed;
 
     public CinemachineVirtualCamera VC;
+    public Animator VCAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -39,26 +47,78 @@ public class PlayerMovement : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        if (moveRight == false && moveLeft == false && Mathf.Abs(horizontal) <= 0.4)
+        if (moveRight == false && moveLeft == false && Mathf.Abs(horizontal) <= 0.4 && inMidAir == false)
         {
             moveCooldown = false;
         }
 
         if (onBotWall == true)
         {
+            if (Input.GetAxisRaw("Jump") == 1 && moveCooldown == false)
+            {
+                StartCoroutine(Jump());
+                inMidAir = true;
+                moveCooldown = true;
+            }
+
             if(horizontal >= 0.5 && moveCooldown == false && currentWall != 4)
             {
                 moveCooldown = true;
                 moveRight = true;
-                StartCoroutine(CameraShake("Right"));
+
+                if(isRunningRight == false)
+                {
+                    StartCoroutine(CameraShake("Right"));
+                }
             }
 
             if (horizontal <= -0.5 && moveCooldown == false && currentWall != 0)
             {
                 moveCooldown = true;
                 moveLeft = true;
-                StartCoroutine(CameraShake("Left"));
+
+                if (isRunningLeft == false)
+                {
+                    StartCoroutine(CameraShake("Left"));
+                }
             }
+        }
+
+        if(onTopWall == true)
+        {
+            if (Input.GetAxisRaw("Jump") == 1 && moveCooldown == false)
+            {
+                StartCoroutine(Jump());
+                inMidAir = true;
+                moveCooldown = true;
+            }
+
+            if (horizontal >= 0.5 && moveCooldown == false && currentWall != 0)
+            {
+                moveCooldown = true;
+                moveLeft = true;
+
+                if (isRunningRight == false)
+                {
+                    StartCoroutine(CameraShake("Left"));
+                }
+            }
+
+            if (horizontal <= -0.5 && moveCooldown == false && currentWall != 4)
+            {
+                moveCooldown = true;
+                moveRight = true;
+
+                if (isRunningLeft == false)
+                {
+                    StartCoroutine(CameraShake("Right"));
+                }
+            }
+        }
+
+        if(trackPlayer == true)
+        {
+            VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y, gameObject.transform.position.z - 25.21f);
         }
     }
 
@@ -77,6 +137,18 @@ public class PlayerMovement : MonoBehaviour
                     moveRight = false;
                 }
             }
+
+            if(onTopWall == true)
+            {
+                MoveRight();
+
+                if (gameObject.transform.position.x >= topWalls[currentWall + 1].transform.position.x)
+                {
+                    gameObject.transform.position = new Vector3(topWalls[currentWall + 1].transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall + 1;
+                    moveRight = false;
+                }
+            }
         }
 
         if (moveLeft == true)
@@ -88,6 +160,18 @@ public class PlayerMovement : MonoBehaviour
                 if (gameObject.transform.position.x <= botWalls[currentWall - 1].transform.position.x)
                 {
                     gameObject.transform.position = new Vector3(botWalls[currentWall - 1].transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall - 1;
+                    moveLeft = false;
+                }
+            }
+
+            if(onTopWall == true)
+            {
+                MoveLeft();
+
+                if (gameObject.transform.position.x <= topWalls[currentWall - 1].transform.position.x)
+                {
+                    gameObject.transform.position = new Vector3(topWalls[currentWall - 1].transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
                     currentWall = currentWall - 1;
                     moveLeft = false;
                 }
@@ -109,14 +193,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if(direction == "Right")
         {
+            isRunningRight = true;
             VC.m_Lens.Dutch = 0;
 
             while (moveLeft == false)
             {
                 VC.m_Lens.Dutch += 1;
-                yield return new WaitForSeconds(0.005f);
+                yield return new WaitForSeconds(0.01f);
 
-                if(VC.m_Lens.Dutch == 10)
+                if(VC.m_Lens.Dutch == 7)
                 {
                     break;
                 }
@@ -125,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
             while(moveLeft == false)
             {
                 VC.m_Lens.Dutch -= 1;
-                yield return new WaitForSeconds(0.005f);
+                yield return new WaitForSeconds(0.01f);
 
                 if (VC.m_Lens.Dutch == 0)
                 {
@@ -138,14 +223,15 @@ public class PlayerMovement : MonoBehaviour
 
         if(direction == "Left")
         {
+            isRunningLeft = true;
             VC.m_Lens.Dutch = 0;
 
             while (moveRight == false)
             {
                 VC.m_Lens.Dutch -= 1;
-                yield return new WaitForSeconds(0.005f);
+                yield return new WaitForSeconds(0.01f);
 
-                if (VC.m_Lens.Dutch == -10)
+                if (VC.m_Lens.Dutch == -7)
                 {
                     break;
                 }
@@ -154,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
             while (moveRight == false)
             {
                 VC.m_Lens.Dutch += 1;
-                yield return new WaitForSeconds(0.005f);
+                yield return new WaitForSeconds(0.01f);
 
                 if (VC.m_Lens.Dutch == 0)
                 {
@@ -163,6 +249,100 @@ public class PlayerMovement : MonoBehaviour
             }
 
             VC.m_Lens.Dutch = 0;
+        }
+
+        if(direction == "GravitySlam")
+        {
+            VC.transform.parent = null;
+            trackPlayer = true;
+
+            yield return new WaitForSeconds(0.4f);
+
+            if(onBotWall == true)
+            {
+                VCAnim.Play("GravityFlipTop");
+                StartCoroutine(CameraShift(1));
+            }
+
+            if (onTopWall == true)
+            {
+                VCAnim.Play("GravityFlipBot");
+                StartCoroutine(CameraShift(2));
+            }
+
+            yield return new WaitForSeconds(0.3f);
+
+            VC.transform.parent = gameObject.transform;
+            trackPlayer = false;
+            inMidAir = false;
+            moveCooldown = false;
+            moveCooldown = false;
+        }
+
+        isRunningRight = false;
+        isRunningLeft = false;
+    }
+
+    private IEnumerator Jump()
+    {
+        StartCoroutine(CameraShake("GravitySlam"));
+        while(true)
+        {
+            if(gameObject.transform.position.y >= 13.4 && onBotWall == true)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 13.5f, gameObject.transform.position.z);
+                break;
+            }
+
+            if (gameObject.transform.position.y <= -4 && onTopWall == true)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, -4.5f, gameObject.transform.position.z);
+                break;
+            }
+
+            if (onBotWall == true)
+            {
+                gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+            }
+
+            if (onTopWall == true)
+            {
+                gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+            }
+
+            yield return new WaitForSeconds(0.00001f);
+        }
+
+        if(onBotWall == true)
+        {
+            onBotWall = false;
+            onTopWall = true;
+        }
+        else if (onTopWall == true)
+        {
+            onBotWall = true;
+            onTopWall = false;
+        }
+    }
+
+    private IEnumerator CameraShift(int i)
+    {
+        if(i == 1)
+        {
+            for(int a = 0; a < 35; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y + 0.1f, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
+        }
+
+        if (i == 2)
+        {
+            for (int a = 0; a < 35; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y - 0.1f, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
         }
     }
 }
