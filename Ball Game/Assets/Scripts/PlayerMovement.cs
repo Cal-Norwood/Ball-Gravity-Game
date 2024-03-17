@@ -28,9 +28,18 @@ public class PlayerMovement : MonoBehaviour
 
     bool trackPlayer = false;
 
+    public bool gravityChangeLeft = false;
+    public bool gravityChangeRight = false;
+
     public int currentWall = 2;
 
     public int laneSwapSpeed;
+
+    public int gravityCharges = 1;
+
+    public float wallCheckDistance = 100;
+
+    public GameObject wallToSnapTo = null;
 
     public CinemachineVirtualCamera VC;
     public Animator VCAnim;
@@ -257,26 +266,29 @@ public class PlayerMovement : MonoBehaviour
             trackPlayer = true;
 
             yield return new WaitForSeconds(0.4f);
-
-            if(onBotWall == true)
+            if(gravityCharges != 0)
             {
-                VCAnim.Play("GravityFlipTop");
-                StartCoroutine(CameraShift(1));
+                gravityCharges = 0;
+                if (onBotWall == true)
+                {
+                    VCAnim.Play("GravityFlipTop");
+                    StartCoroutine(CameraShift(1));
+                }
+
+                if (onTopWall == true)
+                {
+                    VCAnim.Play("GravityFlipBot");
+                    StartCoroutine(CameraShift(2));
+                }
+
+                yield return new WaitForSeconds(0.3f);
+
+                gravityCharges = 1;
+                VC.transform.parent = gameObject.transform;
+                trackPlayer = false;
+                inMidAir = false;
+                moveCooldown = false;
             }
-
-            if (onTopWall == true)
-            {
-                VCAnim.Play("GravityFlipBot");
-                StartCoroutine(CameraShift(2));
-            }
-
-            yield return new WaitForSeconds(0.3f);
-
-            VC.transform.parent = gameObject.transform;
-            trackPlayer = false;
-            inMidAir = false;
-            moveCooldown = false;
-            moveCooldown = false;
         }
 
         isRunningRight = false;
@@ -288,6 +300,74 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(CameraShake("GravitySlam"));
         while(true)
         {
+            if(gravityCharges > 0)
+            {
+                if(Input.GetAxisRaw("Horizontal") >= 0.5 && Input.GetAxisRaw("Jump") == 1)
+                {
+                    gravityCharges--;
+
+                    if(onBotWall == true)
+                    {
+                        gravityChangeRight = true;
+
+                        foreach (GameObject G in rightWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.y - G.transform.position.y) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
+                                wallToSnapTo = G;
+                            }
+                        }
+                    } 
+                    else if(onTopWall == true)
+                    {
+                        gravityChangeLeft = true;
+
+                        foreach (GameObject G in leftWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.y - G.transform.position.y) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
+                                wallToSnapTo = G;
+                            }
+                        }
+                    }
+                    break;
+                }
+
+                if (Input.GetAxisRaw("Horizontal") <= -0.5 && Input.GetAxisRaw("Jump") == 1)
+                {
+                    gravityCharges--;
+
+                    if (onTopWall == true)
+                    {
+                        gravityChangeRight = true;
+
+                        foreach (GameObject G in rightWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.y - G.transform.position.y) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
+                                wallToSnapTo = G;
+                            }
+                        }
+                    }
+                    else if (onBotWall == true)
+                    {
+                        gravityChangeLeft = true;
+                        foreach (GameObject G in leftWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.y - G.transform.position.y) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
+                                wallToSnapTo = G;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+
             if(gameObject.transform.position.y >= 13.4 && onBotWall == true)
             {
                 gameObject.transform.position = new Vector3(gameObject.transform.position.x, 13.5f, gameObject.transform.position.z);
@@ -311,6 +391,42 @@ public class PlayerMovement : MonoBehaviour
             }
 
             yield return new WaitForSeconds(0.00001f);
+        }
+
+        while(gravityChangeLeft == true)
+        {
+            if(gameObject.transform.position.y < wallToSnapTo.transform.position.y)
+            {
+                gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+            }
+            else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
+            {
+                gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+            }
+
+            if(gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, wallToSnapTo.transform.position.y, gameObject.transform.position.z);
+                break;
+            }
+        }
+
+        while (gravityChangeRight == true)
+        {
+            if (gameObject.transform.position.y < wallToSnapTo.transform.position.y)
+            {
+                gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+            }
+            else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
+            {
+                gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+            }
+
+            if (gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, wallToSnapTo.transform.position.y, gameObject.transform.position.z);
+                break;
+            }
         }
 
         if(onBotWall == true)
