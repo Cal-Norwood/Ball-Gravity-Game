@@ -277,8 +277,7 @@ public class PlayerMovement : MonoBehaviour
                     VCAnim.Play("GravityFlipTop");
                     StartCoroutine(CameraShift(1));
                 }
-
-                if (onTopWall == true)
+                else if (onTopWall == true)
                 {
                     VCAnim.Play("GravityFlipBot");
                     StartCoroutine(CameraShift(2));
@@ -291,6 +290,21 @@ public class PlayerMovement : MonoBehaviour
                 trackPlayer = false;
                 inMidAir = false;
                 moveCooldown = false;
+            }
+            else
+            {
+                if(onBotWall == true && readyToJumpLeft == true)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    VCAnim.Play("GravityFlipLeft");
+                    StartCoroutine(CameraShift(3));
+                }
+                else if (onBotWall == true && readyToJumpRight == true)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    VCAnim.Play("GravityFlipRight");
+                    StartCoroutine(CameraShift(4));
+                }
             }
         }
 
@@ -420,11 +434,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(gameObject.transform.position.x > -8.7)
                 {
-                    gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * 30);
+                    gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * 50);
                 }
                 else if(gameObject.transform.position.x < -8.7)
                 {
-                    Debug.Log("woking");
                     gameObject.transform.position = new Vector3(-9, gameObject.transform.position.y, gameObject.transform.position.z);
                     break;
                 }
@@ -454,7 +467,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.transform.position.x < 8.7)
                 {
-                    gameObject.transform.Translate(gameObject.transform.right * Time.deltaTime * 30);
+                    gameObject.transform.Translate(gameObject.transform.right * Time.deltaTime * 50);
                 }
                 else if (gameObject.transform.position.x > 8.7)
                 {
@@ -561,6 +574,24 @@ public class PlayerMovement : MonoBehaviour
             for (int a = 0; a < 35; a++)
             {
                 VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y - 0.1f, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
+        }
+
+        if(i == 3)
+        {
+            for(int a = 0; a < 15; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y + 0.1f, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
+        }
+
+        if (i == 4)
+        {
+            for (int a = 0; a < 15; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y + 0.1f, VC.transform.position.z);
                 yield return new WaitForSeconds(0.001f);
             }
         }
