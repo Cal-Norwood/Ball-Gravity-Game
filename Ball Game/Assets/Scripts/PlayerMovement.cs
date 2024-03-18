@@ -128,6 +128,31 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        if(onLeftWall == true)
+        {
+            if (horizontal >= 0.5 && moveCooldown == false && currentWall != 0)
+            {
+                moveCooldown = true;
+                moveRight = true;
+
+                if (isRunningRight == false)
+                {
+                    StartCoroutine(CameraShake("Left"));
+                }
+            }
+
+            if (horizontal <= -0.5 && moveCooldown == false && currentWall != 4)
+            {
+                moveCooldown = true;
+                moveLeft = true;
+
+                if (isRunningLeft == false)
+                {
+                    StartCoroutine(CameraShake("Right"));
+                }
+            }
+        }
+
         if(trackPlayer == true)
         {
             VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y, gameObject.transform.position.z - 25.21f);
@@ -161,6 +186,18 @@ public class PlayerMovement : MonoBehaviour
                     moveRight = false;
                 }
             }
+
+            if(onLeftWall == true)
+            {
+                MoveDown();
+
+                if (gameObject.transform.position.y <= leftWalls[currentWall - 1].transform.position.y)
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, leftWalls[currentWall - 1].transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall - 1;
+                    moveRight = false;
+                }
+            }
         }
 
         if (moveLeft == true)
@@ -188,6 +225,18 @@ public class PlayerMovement : MonoBehaviour
                     moveLeft = false;
                 }
             }
+
+            if (onLeftWall == true)
+            {
+                MoveUp();
+
+                if (gameObject.transform.position.y >= leftWalls[currentWall + 1].transform.position.y)
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, leftWalls[currentWall + 1].transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall + 1;
+                    moveLeft = false;
+                }
+            }
         }
     }
 
@@ -199,6 +248,16 @@ public class PlayerMovement : MonoBehaviour
     void MoveLeft()
     {
         gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * laneSwapSpeed);
+    }
+
+    void MoveUp()
+    {
+        gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * laneSwapSpeed);
+    }
+
+    void MoveDown()
+    {
+        gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * laneSwapSpeed);
     }
 
     private IEnumerator CameraShake(string direction)
@@ -400,6 +459,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     gravityCharges--;
 
+                    int i = 0;
                     if(onBotWall == true)
                     {
                         gravityChangeRight = true;
@@ -410,6 +470,8 @@ public class PlayerMovement : MonoBehaviour
                             {
                                 wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
                                 wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
                             }
                         }
                     } 
@@ -423,6 +485,8 @@ public class PlayerMovement : MonoBehaviour
                             {
                                 wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
                                 wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
                             }
                         }
                     }
@@ -433,6 +497,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     gravityCharges--;
 
+                    int i = 0;
                     if (onTopWall == true)
                     {
                         gravityChangeRight = true;
@@ -443,6 +508,8 @@ public class PlayerMovement : MonoBehaviour
                             {
                                 wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
                                 wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
                             }
                         }
                     }
@@ -455,6 +522,8 @@ public class PlayerMovement : MonoBehaviour
                             {
                                 wallCheckDistance = Mathf.Abs(gameObject.transform.position.y - G.transform.position.y);
                                 wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
                             }
                         }
                     }
@@ -615,3 +684,5 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
+
+//Fix virtual camera x issue
