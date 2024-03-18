@@ -137,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (isRunningRight == false)
                 {
-                    StartCoroutine(CameraShake("Left"));
+                    StartCoroutine(CameraShake("Right"));
                 }
             }
 
@@ -148,12 +148,37 @@ public class PlayerMovement : MonoBehaviour
 
                 if (isRunningLeft == false)
                 {
-                    StartCoroutine(CameraShake("Right"));
+                    StartCoroutine(CameraShake("Left"));
                 }
             }
         }
 
-        if(trackPlayer == true)
+        if (onRightWall == true)
+        {
+            if (horizontal >= 0.5 && moveCooldown == false && currentWall != 4)
+            {
+                moveCooldown = true;
+                moveRight = true;
+
+                if (isRunningRight == false)
+                {
+                    StartCoroutine(CameraShake("Right"));
+                }
+            }
+
+            if (horizontal <= -0.5 && moveCooldown == false && currentWall != 0)
+            {
+                moveCooldown = true;
+                moveLeft = true;
+
+                if (isRunningLeft == false)
+                {
+                    StartCoroutine(CameraShake("Left"));
+                }
+            }
+        }
+
+        if (trackPlayer == true)
         {
             VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y, gameObject.transform.position.z - 25.21f);
         }
@@ -198,6 +223,18 @@ public class PlayerMovement : MonoBehaviour
                     moveRight = false;
                 }
             }
+
+            if (onRightWall == true)
+            {
+                MoveUp();
+
+                if (gameObject.transform.position.y >= leftWalls[currentWall + 1].transform.position.y)
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, leftWalls[currentWall + 1].transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall + 1;
+                    moveRight = false;
+                }
+            }
         }
 
         if (moveLeft == true)
@@ -234,6 +271,18 @@ public class PlayerMovement : MonoBehaviour
                 {
                     gameObject.transform.position = new Vector3(gameObject.transform.position.x, leftWalls[currentWall + 1].transform.position.y, gameObject.transform.position.z);
                     currentWall = currentWall + 1;
+                    moveLeft = false;
+                }
+            }
+
+            if (onRightWall == true)
+            {
+                MoveDown();
+
+                if (gameObject.transform.position.y <= leftWalls[currentWall - 1].transform.position.y)
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, leftWalls[currentWall - 1].transform.position.y, gameObject.transform.position.z);
+                    currentWall = currentWall - 1;
                     moveLeft = false;
                 }
             }
@@ -556,6 +605,8 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForSeconds(0.00001f);
         }
 
+        bool gravityShakeL = false;
+
         while(gravityChangeLeft == true)
         {
             if(readyToJumpLeft == false)
@@ -578,9 +629,15 @@ public class PlayerMovement : MonoBehaviour
 
             if(readyToJumpLeft == true)
             {
+                if(gravityShakeL == false)
+                {
+                    StartCoroutine(CameraShakeGravity(0));
+                    gravityShakeL = true;
+                }
+
                 if(gameObject.transform.position.x > -8.7)
                 {
-                    gameObject.transform.Translate(-gameObject.transform.right * Time.fixedDeltaTime * 15);
+                    gameObject.transform.Translate(-gameObject.transform.right * Time.fixedDeltaTime * 25);
                 }
                 else if(gameObject.transform.position.x < -8.7)
                 {
@@ -592,6 +649,7 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
 
+        bool gravityShakeR = false;
         while (gravityChangeRight == true)
         {
             if (gameObject.transform.position.y < wallToSnapTo.transform.position.y)
@@ -613,7 +671,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.transform.position.x < 8.7)
                 {
-                    gameObject.transform.Translate(gameObject.transform.right * Time.fixedDeltaTime * 15);
+                    if(gravityShakeR == false)
+                    {
+                        StartCoroutine(CameraShakeGravity(1));
+                    }
+
+                    gravityShakeR = true;
+                    gameObject.transform.Translate(gameObject.transform.right * Time.fixedDeltaTime * 25);
                 }
                 else if (gameObject.transform.position.x > 8.7)
                 {
@@ -651,17 +715,26 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(VC.transform.position.y < gameObject.transform.position.y)
                 {
-                    VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
+                    VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
                 }
                 else
                 {
-                    VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                    VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+
+                if(VC.transform.position.x > 3.5)
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x - (1.5f / 15), VC.transform.position.y, VC.transform.position.z);
+                }
+                else
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x + (1.5f / 15), VC.transform.position.y, VC.transform.position.z);
                 }
 
                 yield return new WaitForSeconds(0.001f);
             }
 
-            VC.transform.position = new Vector3(VC.transform.position.x, gameObject.transform.position.y, VC.transform.position.z);
+            VC.transform.position = new Vector3(-1.5f, gameObject.transform.position.y, VC.transform.position.z);
         }
 
         if (i == 4)
@@ -670,19 +743,89 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (VC.transform.position.y < gameObject.transform.position.y)
                 {
-                    VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
+                    VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
                 }
                 else
                 {
-                    VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                    VC.transform.position = new Vector3(VC.transform.position.x, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+
+                if (VC.transform.position.x > 3.5)
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x - (1.5f / 15), VC.transform.position.y, VC.transform.position.z);
+                }
+                else
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x + (1.5f / 15), VC.transform.position.y, VC.transform.position.z);
                 }
 
                 yield return new WaitForSeconds(0.001f);
             }
 
-            VC.transform.position = new Vector3(VC.transform.position.x, gameObject.transform.position.y, VC.transform.position.z);
+            VC.transform.position = new Vector3(1.5f, gameObject.transform.position.y, VC.transform.position.z);
+        }
+    }
+
+    IEnumerator CameraShakeGravity(int dir)
+    {
+        if (dir == 0)
+        {
+            isRunningLeft = true;
+            VC.m_Lens.Dutch = 0;
+
+            while (moveRight == false)
+            {
+                VC.m_Lens.Dutch -= 1;
+                yield return new WaitForSeconds(0.01f);
+
+                if (VC.m_Lens.Dutch == -20)
+                {
+                    break;
+                }
+            }
+
+            while (moveRight == false)
+            {
+                VC.m_Lens.Dutch += 1;
+                yield return new WaitForSeconds(0.01f);
+
+                if (VC.m_Lens.Dutch == 0)
+                {
+                    break;
+                }
+            }
+
+            VC.m_Lens.Dutch = 0;
+        }
+
+        if (dir == 1)
+        {
+            isRunningRight = true;
+            VC.m_Lens.Dutch = 0;
+
+            while (moveLeft == false)
+            {
+                VC.m_Lens.Dutch += 1;
+                yield return new WaitForSeconds(0.01f);
+
+                if (VC.m_Lens.Dutch == 20)
+                {
+                    break;
+                }
+            }
+
+            while (moveLeft == false)
+            {
+                VC.m_Lens.Dutch -= 1;
+                yield return new WaitForSeconds(0.01f);
+
+                if (VC.m_Lens.Dutch == 0)
+                {
+                    break;
+                }
+            }
+
+            VC.m_Lens.Dutch = 0;
         }
     }
 }
-
-//Fix virtual camera x issue
