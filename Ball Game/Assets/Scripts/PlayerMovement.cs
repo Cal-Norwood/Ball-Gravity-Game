@@ -282,30 +282,107 @@ public class PlayerMovement : MonoBehaviour
                     VCAnim.Play("GravityFlipBot");
                     StartCoroutine(CameraShift(2));
                 }
-
-                yield return new WaitForSeconds(0.3f);
-
-                gravityCharges = 1;
-                VC.transform.parent = gameObject.transform;
-                trackPlayer = false;
-                inMidAir = false;
-                moveCooldown = false;
             }
             else
             {
-                if(onBotWall == true && readyToJumpLeft == true)
+                if (onBotWall == true && gravityChangeLeft == true)
                 {
                     yield return new WaitForSeconds(0.1f);
                     VCAnim.Play("GravityFlipLeft");
                     StartCoroutine(CameraShift(3));
                 }
-                else if (onBotWall == true && readyToJumpRight == true)
+                else if (onBotWall == true && gravityChangeRight == true)
                 {
                     yield return new WaitForSeconds(0.1f);
                     VCAnim.Play("GravityFlipRight");
                     StartCoroutine(CameraShift(4));
                 }
             }
+            yield return new WaitForSeconds(0.3f);
+
+            if (onBotWall == true)
+            {
+                if (readyToJumpLeft == false && readyToJumpRight == false)
+                {
+                    onBotWall = false;
+                    onTopWall = true;
+                }
+                else if (readyToJumpLeft == true)
+                {
+                    onBotWall = false;
+                    onLeftWall = true;
+                }
+                else if (readyToJumpRight == true)
+                {
+                    onBotWall = false;
+                    onRightWall = true;
+                }
+            }
+            else if (onTopWall == true)
+            {
+                if (readyToJumpLeft == false && readyToJumpRight == false)
+                {
+                    onBotWall = true;
+                    onTopWall = false;
+                }
+                else if (readyToJumpLeft == true)
+                {
+                    onBotWall = false;
+                    onLeftWall = true;
+                }
+                else if (readyToJumpRight == true)
+                {
+                    onBotWall = false;
+                    onRightWall = true;
+                }
+            }
+            else if (onLeftWall == true)
+            {
+                if (readyToJumpLeft == false && readyToJumpRight == false)
+                {
+                    onRightWall = true;
+                    onLeftWall = false;
+                }
+                else if (readyToJumpLeft == true)
+                {
+                    onTopWall = true;
+                    onLeftWall = false;
+                }
+                else if (readyToJumpRight == true)
+                {
+                    onLeftWall = false;
+                    onBotWall = true;
+                }
+            }
+            else if (onRightWall == true)
+            {
+                if (readyToJumpLeft == false && readyToJumpRight == false)
+                {
+                    onRightWall = false;
+                    onLeftWall = true;
+                }
+                else if (readyToJumpLeft == true)
+                {
+                    onBotWall = true;
+                    onRightWall = false;
+                }
+                else if (readyToJumpRight == true)
+                {
+                    onRightWall = false;
+                    onTopWall = true;
+                }
+            }
+
+            gravityChangeLeft = false;
+            gravityChangeRight = false;
+            readyToJumpLeft = false;
+            readyToJumpRight = false;
+
+            VC.transform.parent = gameObject.transform;
+            gravityCharges = 1;
+            trackPlayer = false;
+            inMidAir = false;
+            moveCooldown = false;
         }
 
         isRunningRight = false;
@@ -416,11 +493,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.transform.position.y < wallToSnapTo.transform.position.y)
                 {
-                    gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+                    gameObject.transform.Translate(gameObject.transform.up * Time.fixedDeltaTime * 15);
                 }
                 else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
                 {
-                    gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+                    gameObject.transform.Translate(-gameObject.transform.up * Time.fixedDeltaTime * 15);
                 }
 
                 if (gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
@@ -434,7 +511,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(gameObject.transform.position.x > -8.7)
                 {
-                    gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * 50);
+                    gameObject.transform.Translate(-gameObject.transform.right * Time.fixedDeltaTime * 15);
                 }
                 else if(gameObject.transform.position.x < -8.7)
                 {
@@ -450,11 +527,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (gameObject.transform.position.y < wallToSnapTo.transform.position.y)
             {
-                gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+                gameObject.transform.Translate(gameObject.transform.up * Time.fixedDeltaTime * 15);
             }
             else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
             {
-                gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+                gameObject.transform.Translate(-gameObject.transform.up * Time.fixedDeltaTime * 15);
             }
 
             if (gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
@@ -467,7 +544,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (gameObject.transform.position.x < 8.7)
                 {
-                    gameObject.transform.Translate(gameObject.transform.right * Time.deltaTime * 50);
+                    gameObject.transform.Translate(gameObject.transform.right * Time.fixedDeltaTime * 15);
                 }
                 else if (gameObject.transform.position.x > 8.7)
                 {
@@ -475,87 +552,8 @@ public class PlayerMovement : MonoBehaviour
                     break;
                 }
             }
-
             yield return new WaitForSeconds(0.01f);
         }
-
-        if(onBotWall == true)
-        {
-            if(readyToJumpLeft == false && readyToJumpRight == false) 
-            {
-                onBotWall = false;
-                onTopWall = true;
-            }
-            else if(readyToJumpLeft == true)
-            {
-                onBotWall = false;
-                onLeftWall = true;
-            }
-            else if (readyToJumpRight == true)
-            {
-                onBotWall = false;
-                onRightWall = true;
-            }
-        }
-        else if (onTopWall == true)
-        {
-            if (readyToJumpLeft == false && readyToJumpRight == false)
-            {
-                onBotWall = true;
-                onTopWall = false;
-            }
-            else if (readyToJumpLeft == true)
-            {
-                onBotWall = false;
-                onLeftWall = true;
-            }
-            else if (readyToJumpRight == true)
-            {
-                onBotWall = false;
-                onRightWall = true;
-            }
-        }
-        else if (onLeftWall == true)
-        {
-            if (readyToJumpLeft == false && readyToJumpRight == false)
-            {
-                onRightWall = true;
-                onLeftWall = false;
-            }
-            else if (readyToJumpLeft == true)
-            {
-                onTopWall = true;
-                onLeftWall = false;
-            }
-            else if (readyToJumpRight == true)
-            {
-                onLeftWall = false;
-                onBotWall = true;
-            }
-        }
-        else if (onRightWall == true)
-        {
-            if (readyToJumpLeft == false && readyToJumpRight == false)
-            {
-                onRightWall = false;
-                onLeftWall = true;
-            }
-            else if (readyToJumpLeft == true)
-            {
-                onBotWall = true;
-                onRightWall = false;
-            }
-            else if (readyToJumpRight == true)
-            {
-                onRightWall = false;
-                onTopWall = true;
-            }
-        }
-
-        gravityChangeLeft = false;
-        gravityChangeRight = false;
-        readyToJumpLeft = false;
-        readyToJumpRight = false;
     }
 
     private IEnumerator CameraShift(int i)
@@ -582,18 +580,38 @@ public class PlayerMovement : MonoBehaviour
         {
             for(int a = 0; a < 15; a++)
             {
-                VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y + 0.1f, VC.transform.position.z);
+                if(VC.transform.position.y < gameObject.transform.position.y)
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+                else
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+
                 yield return new WaitForSeconds(0.001f);
             }
+
+            VC.transform.position = new Vector3(VC.transform.position.x, gameObject.transform.position.y, VC.transform.position.z);
         }
 
         if (i == 4)
         {
             for (int a = 0; a < 15; a++)
             {
-                VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y + 0.1f, VC.transform.position.z);
+                if (VC.transform.position.y < gameObject.transform.position.y)
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y + (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+                else
+                {
+                    VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y - (gameObject.transform.position.y / 5), VC.transform.position.z);
+                }
+
                 yield return new WaitForSeconds(0.001f);
             }
+
+            VC.transform.position = new Vector3(VC.transform.position.x, gameObject.transform.position.y, VC.transform.position.z);
         }
     }
 }
