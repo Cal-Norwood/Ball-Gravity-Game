@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
     public bool gravityChangeLeft = false;
     public bool gravityChangeRight = false;
 
+    public bool readyToJumpLeft = false;
+    public bool readyToJumpRight = false;
+
     public int currentWall = 2;
 
     public int laneSwapSpeed;
@@ -395,20 +398,39 @@ public class PlayerMovement : MonoBehaviour
 
         while(gravityChangeLeft == true)
         {
-            if(gameObject.transform.position.y < wallToSnapTo.transform.position.y)
+            if(readyToJumpLeft == false)
             {
-                gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
-            }
-            else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
-            {
-                gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+                if (gameObject.transform.position.y < wallToSnapTo.transform.position.y)
+                {
+                    gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
+                }
+                else if (gameObject.transform.position.y > wallToSnapTo.transform.position.y)
+                {
+                    gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+                }
+
+                if (gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, wallToSnapTo.transform.position.y, gameObject.transform.position.z);
+                    readyToJumpLeft = true;
+                }
             }
 
-            if(gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
+            if(readyToJumpLeft == true)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, wallToSnapTo.transform.position.y, gameObject.transform.position.z);
-                break;
+                if(gameObject.transform.position.x > -8.7)
+                {
+                    gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * 30);
+                }
+                else if(gameObject.transform.position.x < -8.7)
+                {
+                    Debug.Log("woking");
+                    gameObject.transform.position = new Vector3(-9, gameObject.transform.position.y, gameObject.transform.position.z);
+                    break;
+                }
             }
+
+            yield return new WaitForSeconds(0.01f);
         }
 
         while (gravityChangeRight == true)
@@ -425,20 +447,102 @@ public class PlayerMovement : MonoBehaviour
             if (gameObject.transform.position.y > wallToSnapTo.transform.position.y - 0.3 && gameObject.transform.position.y < wallToSnapTo.transform.position.y + 0.3)
             {
                 gameObject.transform.position = new Vector3(gameObject.transform.position.x, wallToSnapTo.transform.position.y, gameObject.transform.position.z);
-                break;
+                readyToJumpRight = true;
             }
+
+            if (readyToJumpRight == true)
+            {
+                if (gameObject.transform.position.x < 8.7)
+                {
+                    gameObject.transform.Translate(gameObject.transform.right * Time.deltaTime * 30);
+                }
+                else if (gameObject.transform.position.x > 8.7)
+                {
+                    gameObject.transform.position = new Vector3(9, gameObject.transform.position.y, gameObject.transform.position.z);
+                    break;
+                }
+            }
+
+            yield return new WaitForSeconds(0.01f);
         }
 
         if(onBotWall == true)
         {
-            onBotWall = false;
-            onTopWall = true;
+            if(readyToJumpLeft == false && readyToJumpRight == false) 
+            {
+                onBotWall = false;
+                onTopWall = true;
+            }
+            else if(readyToJumpLeft == true)
+            {
+                onBotWall = false;
+                onLeftWall = true;
+            }
+            else if (readyToJumpRight == true)
+            {
+                onBotWall = false;
+                onRightWall = true;
+            }
         }
         else if (onTopWall == true)
         {
-            onBotWall = true;
-            onTopWall = false;
+            if (readyToJumpLeft == false && readyToJumpRight == false)
+            {
+                onBotWall = true;
+                onTopWall = false;
+            }
+            else if (readyToJumpLeft == true)
+            {
+                onBotWall = false;
+                onLeftWall = true;
+            }
+            else if (readyToJumpRight == true)
+            {
+                onBotWall = false;
+                onRightWall = true;
+            }
         }
+        else if (onLeftWall == true)
+        {
+            if (readyToJumpLeft == false && readyToJumpRight == false)
+            {
+                onRightWall = true;
+                onLeftWall = false;
+            }
+            else if (readyToJumpLeft == true)
+            {
+                onTopWall = true;
+                onLeftWall = false;
+            }
+            else if (readyToJumpRight == true)
+            {
+                onLeftWall = false;
+                onBotWall = true;
+            }
+        }
+        else if (onRightWall == true)
+        {
+            if (readyToJumpLeft == false && readyToJumpRight == false)
+            {
+                onRightWall = false;
+                onLeftWall = true;
+            }
+            else if (readyToJumpLeft == true)
+            {
+                onBotWall = true;
+                onRightWall = false;
+            }
+            else if (readyToJumpRight == true)
+            {
+                onRightWall = false;
+                onTopWall = true;
+            }
+        }
+
+        gravityChangeLeft = false;
+        gravityChangeRight = false;
+        readyToJumpLeft = false;
+        readyToJumpRight = false;
     }
 
     private IEnumerator CameraShift(int i)

@@ -5250,8 +5250,15 @@ MonoBehaviour:
   onRightWall: 0
   moveRight: 0
   moveLeft: 0
+  gravityChangeLeft: 0
+  gravityChangeRight: 0
+  readyToJumpLeft: 0
+  readyToJumpRight: 0
   currentWall: 2
   laneSwapSpeed: 40
+  gravityCharges: 1
+  wallCheckDistance: 100
+  wallToSnapTo: {fileID: 0}
   VC: {fileID: 740582263}
   VCAnim: {fileID: 740582264}
 --- !u!54 &1328400065
