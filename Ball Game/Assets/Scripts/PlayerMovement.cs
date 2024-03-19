@@ -405,6 +405,18 @@ public class PlayerMovement : MonoBehaviour
                     VCAnim.Play("GravityFlipRight");
                     StartCoroutine(CameraShift(4));
                 }
+                else if (onTopWall == true && gravityChangeLeft == true)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    VCAnim.Play("GravityFlipTLeft");
+                    StartCoroutine(CameraShift(3));
+                }
+                else if (onTopWall == true && gravityChangeRight == true)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    VCAnim.Play("GravityFlipTRight");
+                    StartCoroutine(CameraShift(4));
+                }
             }
             yield return new WaitForSeconds(0.3f);
 
@@ -435,12 +447,12 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else if (readyToJumpLeft == true)
                 {
-                    onBotWall = false;
+                    onTopWall = false;
                     onLeftWall = true;
                 }
                 else if (readyToJumpRight == true)
                 {
-                    onBotWall = false;
+                    onTopWall = false;
                     onRightWall = true;
                 }
             }
@@ -631,7 +643,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(gravityShakeL == false)
                 {
-                    StartCoroutine(CameraShakeGravity(0));
+                    if(onBotWall == true)
+                    {
+                        StartCoroutine(CameraShakeGravity(0));
+                    }
+                    else if (onTopWall == true)
+                    {
+                        StartCoroutine(CameraShakeGravity(1));
+                    }
                     gravityShakeL = true;
                 }
 
@@ -673,7 +692,14 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if(gravityShakeR == false)
                     {
-                        StartCoroutine(CameraShakeGravity(1));
+                        if(onBotWall == true)
+                        {
+                            StartCoroutine(CameraShakeGravity(1));
+                        }
+                        else if(onTopWall == true)
+                        {
+                            StartCoroutine(CameraShakeGravity(0));
+                        }
                     }
 
                     gravityShakeR = true;
