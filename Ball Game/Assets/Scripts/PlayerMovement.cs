@@ -30,9 +30,13 @@ public class PlayerMovement : MonoBehaviour
 
     public bool gravityChangeLeft = false;
     public bool gravityChangeRight = false;
+    public bool gravityChangeUp = false;
+    public bool gravityChangeDown = false;
 
     public bool readyToJumpLeft = false;
     public bool readyToJumpRight = false;
+    public bool readyToJumpUp = false;
+    public bool readyToJumpDown = false;
 
     public int currentWall = 2;
 
@@ -130,6 +134,13 @@ public class PlayerMovement : MonoBehaviour
 
         if(onLeftWall == true)
         {
+            if (Input.GetAxisRaw("Jump") == 1 && moveCooldown == false)
+            {
+                StartCoroutine(Jump());
+                inMidAir = true;
+                moveCooldown = true;
+            }
+
             if (horizontal >= 0.5 && moveCooldown == false && currentWall != 0)
             {
                 moveCooldown = true;
@@ -155,6 +166,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (onRightWall == true)
         {
+            if (Input.GetAxisRaw("Jump") == 1 && moveCooldown == false)
+            {
+                StartCoroutine(Jump());
+                inMidAir = true;
+                moveCooldown = true;
+            }
+
             if (horizontal >= 0.5 && moveCooldown == false && currentWall != 4)
             {
                 moveCooldown = true;
@@ -390,6 +408,16 @@ public class PlayerMovement : MonoBehaviour
                     VCAnim.Play("GravityFlipBot");
                     StartCoroutine(CameraShift(2));
                 }
+                else if (onLeftWall == true)
+                {
+                    VCAnim.Play("GravityFlipLeftRight");
+                    StartCoroutine(CameraShift(5));
+                }
+                else if (onRightWall == true)
+                {
+                    VCAnim.Play("GravityFlipRightLeft");
+                    StartCoroutine(CameraShift(6));
+                }
             }
             else
             {
@@ -458,17 +486,17 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (onLeftWall == true)
             {
-                if (readyToJumpLeft == false && readyToJumpRight == false)
+                if (readyToJumpDown == false && readyToJumpUp == false)
                 {
                     onRightWall = true;
                     onLeftWall = false;
                 }
-                else if (readyToJumpLeft == true)
+                else if (readyToJumpUp == true)
                 {
                     onTopWall = true;
                     onLeftWall = false;
                 }
-                else if (readyToJumpRight == true)
+                else if (readyToJumpDown == true)
                 {
                     onLeftWall = false;
                     onBotWall = true;
@@ -511,6 +539,7 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator Jump()
     {
+        wallCheckDistance = 100;
         StartCoroutine(CameraShake("GravitySlam"));
         while(true)
         {
@@ -551,6 +580,22 @@ public class PlayerMovement : MonoBehaviour
                             }
                         }
                     }
+                    else if(onLeftWall == true)
+                    {
+                        gravityChangeDown = true;
+
+                        foreach (GameObject G in botWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.x - G.transform.position.x) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.x - G.transform.position.x);
+                                wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
+                            }
+                        }
+                    }
+
                     break;
                 }
 
@@ -588,6 +633,22 @@ public class PlayerMovement : MonoBehaviour
                             }
                         }
                     }
+                    else if (onLeftWall == true)
+                    {
+                        gravityChangeUp = true;
+
+                        foreach (GameObject G in topWalls)
+                        {
+                            if (Mathf.Abs(gameObject.transform.position.x - G.transform.position.x) < wallCheckDistance)
+                            {
+                                wallCheckDistance = Mathf.Abs(gameObject.transform.position.x - G.transform.position.x);
+                                wallToSnapTo = G;
+                                currentWall = i;
+                                i++;
+                            }
+                        }
+                    }
+
                     break;
                 }
             }
@@ -604,6 +665,18 @@ public class PlayerMovement : MonoBehaviour
                 break;
             }
 
+            if (gameObject.transform.position.x >= 8.75 && onLeftWall == true)
+            {
+                gameObject.transform.position = new Vector3(9f, gameObject.transform.position.y, gameObject.transform.position.z);
+                break;
+            }
+
+            if (gameObject.transform.position.x <= -8.75 && onRightWall == true)
+            {
+                gameObject.transform.position = new Vector3(-9f, gameObject.transform.position.y, gameObject.transform.position.z);
+                break;
+            }
+
             if (onBotWall == true)
             {
                 gameObject.transform.Translate(gameObject.transform.up * Time.deltaTime * 30);
@@ -612,6 +685,16 @@ public class PlayerMovement : MonoBehaviour
             if (onTopWall == true)
             {
                 gameObject.transform.Translate(-gameObject.transform.up * Time.deltaTime * 30);
+            }
+
+            if(onLeftWall == true)
+            {
+                gameObject.transform.Translate(gameObject.transform.right * Time.deltaTime * 30);
+            }
+
+            if (onRightWall == true)
+            {
+                gameObject.transform.Translate(-gameObject.transform.right * Time.deltaTime * 30);
             }
 
             yield return new WaitForSeconds(0.00001f);
@@ -713,6 +796,44 @@ public class PlayerMovement : MonoBehaviour
             }
             yield return new WaitForSeconds(0.01f);
         }
+
+        while (gravityChangeDown == true)
+        {
+            if (gameObject.transform.position.x < wallToSnapTo.transform.position.x)
+            {
+                gameObject.transform.Translate(gameObject.transform.right * Time.fixedDeltaTime * 15);
+            }
+            else if (gameObject.transform.position.x > wallToSnapTo.transform.position.x)
+            {
+                gameObject.transform.Translate(-gameObject.transform.right * Time.fixedDeltaTime * 15);
+            }
+
+            if (gameObject.transform.position.x > wallToSnapTo.transform.position.x - 0.3 && gameObject.transform.position.x < wallToSnapTo.transform.position.x + 0.3)
+            {
+                gameObject.transform.position = new Vector3(wallToSnapTo.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+                readyToJumpDown = true;
+                break;
+            }
+        }
+
+        while (gravityChangeUp == true)
+        {
+            if (gameObject.transform.position.x < wallToSnapTo.transform.position.x)
+            {
+                gameObject.transform.Translate(gameObject.transform.right * Time.fixedDeltaTime * 15);
+            }
+            else if (gameObject.transform.position.x > wallToSnapTo.transform.position.x)
+            {
+                gameObject.transform.Translate(-gameObject.transform.right * Time.fixedDeltaTime * 15);
+            }
+
+            if (gameObject.transform.position.x > wallToSnapTo.transform.position.x - 0.3 && gameObject.transform.position.x < wallToSnapTo.transform.position.x + 0.3)
+            {
+                gameObject.transform.position = new Vector3(wallToSnapTo.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+                readyToJumpUp = true;
+                break;
+            }
+        }
     }
 
     private IEnumerator CameraShift(int i)
@@ -789,6 +910,24 @@ public class PlayerMovement : MonoBehaviour
             }
 
             VC.transform.position = new Vector3(1.5f, gameObject.transform.position.y, VC.transform.position.z);
+        }
+
+        if(i == 5)
+        {
+            for (int a = 0; a < 35; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x + 0.1f, VC.transform.position.y, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
+        }
+
+        if (i == 6)
+        {
+            for (int a = 0; a < 35; a++)
+            {
+                VC.transform.position = new Vector3(VC.transform.position.x - 0.1f, VC.transform.position.y, VC.transform.position.z);
+                yield return new WaitForSeconds(0.001f);
+            }
         }
     }
 
