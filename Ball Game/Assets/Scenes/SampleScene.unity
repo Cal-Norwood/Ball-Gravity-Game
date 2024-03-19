@@ -1641,6 +1641,7 @@ GameObject:
   - component: {fileID: 516572557}
   - component: {fileID: 516572556}
   - component: {fileID: 516572555}
+  - component: {fileID: 516572558}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1734,6 +1735,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516572553}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &516572558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516572553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f4915f46b315440bbac839f40db0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VCAnim: {fileID: 740582264}
 --- !u!1 &525897401
 GameObject:
   m_ObjectHideFlags: 0
@@ -2936,6 +2950,7 @@ GameObject:
   - component: {fileID: 740582262}
   - component: {fileID: 740582263}
   - component: {fileID: 740582264}
+  - component: {fileID: 740582265}
   m_Layer: 0
   m_Name: Virtual Camera
   m_TagString: Untagged
@@ -3019,6 +3034,31 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &740582265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740582261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82e62c82b3be64042ac529dee964cc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowImage: 1
+  m_Image: {fileID: 2800000, guid: 252ca1643a4301846bb362a66d2b1d22, type: 3}
+  m_Aspect: 0
+  m_Alpha: 0
+  m_Center: {x: 0, y: 0}
+  m_Rotation: {x: 0, y: 0, z: 0}
+  m_Scale: {x: 2, y: 2}
+  m_SyncScale: 1
+  m_MuteCamera: 0
+  m_SplitView: 0
+  m_RenderMode: 0
+  m_SortingOrder: 0
+  m_PlaneDistance: 100
 --- !u!1 &768648914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5113,7 +5153,7 @@ GameObject:
   - component: {fileID: 1328400064}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

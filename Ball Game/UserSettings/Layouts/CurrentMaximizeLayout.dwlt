@@ -237,9 +237,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 0e66ffff
-      m_LastClickedID: 0
-      m_ExpandedIDs: 10fbffff845c0000
+      m_SelectedIDs: 12630000
+      m_LastClickedID: 25362
+      m_ExpandedIDs: cee4ffffdeecffff0eeeffff5cf9ffff4e5c0000246300006e630000dc630000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -697,9 +697,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.9823296, y: 5.3262925, z: 833.46515}
+    m_Target: {x: -1.8000128, y: 3.186308, z: 954.11115}
     speed: 2
-    m_Value: {x: 0.9823296, y: 5.3262925, z: 833.46515}
+    m_Value: {x: -1.8000128, y: 3.186308, z: 954.11115}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -745,9 +745,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.00006717758, y: 0.99995565, z: -0.003910922, w: 0.016132757}
+    m_Target: {x: -0.04140031, y: -0.0030631162, z: 0.00028338903, w: -0.9992314}
     speed: 2
-    m_Value: {x: -0.0000671713, y: 0.9998622, z: -0.0039105564, w: 0.01613125}
+    m_Value: {x: -0.041396447, y: -0.0030628303, z: 0.00028336258, w: -0.9991381}
   m_Size:
     m_Target: 10.014487
     speed: 2
@@ -830,7 +830,7 @@ MonoBehaviour:
   - {fileID: 13}
   - {fileID: 14}
   m_Selected: 0
-  m_LastSelected: 1
+  m_LastSelected: 3
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -874,7 +874,7 @@ MonoBehaviour:
     m_SceneHandles: 
     m_ShowAllHits: 0
     m_SkipHidden: 0
-    m_SearchArea: 1
+    m_SearchArea: 0
     m_Folders:
     - Assets/Animation
     m_Globs: []
@@ -886,15 +886,14 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/Animation
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Cal Norwood\Documents\GitHub\Ball-Gravity-Game\Ball
-    Game
+  m_LastProjectPath: C:\Users\n017380n\Documents\GitHub\Ball-Gravity-Game\Ball Game
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 45}
-    m_SelectedIDs: fa5d0000
-    m_LastClickedID: 24058
-    m_ExpandedIDs: 00000000f25d000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 8}
+    m_SelectedIDs: 5e5a0000
+    m_LastClickedID: 23134
+    m_ExpandedIDs: 00000000585e00006e5e000044680000546800005868000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -922,7 +921,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f25d000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000585e000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -947,9 +946,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 0e66ffff
-    m_LastClickedInstanceID: -39410
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs: 12630000
+    m_LastClickedInstanceID: 25362
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000be0600001878000094750000e6c9000034b40000a2110100f4160100307f0000d86e0000aaa10000ce020100ee93000014040100f6930000ae350000129400005cba000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1091,7 +1090,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -39410
+  m_LastSelectedObjectID: 25362
 --- !u!114 &15
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -1159,7 +1158,7 @@ MonoBehaviour:
     m_ControlHash: 1412526313
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 307
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
