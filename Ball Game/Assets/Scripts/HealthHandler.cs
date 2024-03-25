@@ -5,6 +5,8 @@ using UnityEngine;
 public class HealthHandler : MonoBehaviour
 {
     public int playerHealthState = 0;
+    public SceneSwitch sSwitch;
+    public Animator VCAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,10 @@ public class HealthHandler : MonoBehaviour
         {
             playerHealthState = 1;
             StartCoroutine(PlayerLastChance());
+        }
+        else if (playerHealthState == 1)
+        {
+            sSwitch.FailLevel();
         }
     }
 

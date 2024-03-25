@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class SceneSwitch : MonoBehaviour
 {
     public Animator VCAnim;
+    public SaveVariables SV;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,7 @@ public class SceneSwitch : MonoBehaviour
     {
         if(collision.transform.tag == "Player")
         {
+            SV.ShiftScene();
             VCAnim.Play("FadeOut");
             StartCoroutine(LoadWait());
         }
@@ -30,6 +33,12 @@ public class SceneSwitch : MonoBehaviour
     private IEnumerator LoadWait()
     {
         yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene("Level2");
+        SceneManager.LoadScene(SV.sceneIndex);
+    }
+
+    public void FailLevel()
+    {
+        SV.coinAmount = 0;
+        SceneManager.LoadScene(SV.sceneIndex);
     }
 }
