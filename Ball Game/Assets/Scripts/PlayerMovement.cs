@@ -51,6 +51,8 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineVirtualCamera VC;
     public Animator VCAnim;
 
+    public ParticleSystem PS;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -472,6 +474,7 @@ public class PlayerMovement : MonoBehaviour
             }
             yield return new WaitForSeconds(0.3f);
 
+            PS.Play();
             if (onBotWall == true)
             {
                 if (readyToJumpLeft == false && readyToJumpRight == false)

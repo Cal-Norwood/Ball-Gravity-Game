@@ -7014,6 +7014,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea40a5c2641cfb244bc60a8ba1e763f7, type: 3}
+--- !u!198 &1602880585 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2187574689586024099, guid: 9b74451f8217e1f4ca4ad051ec604536, type: 3}
+  m_PrefabInstance: {fileID: 5193838512958592407}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1606307516
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9003,6 +9008,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 889710874940546237, guid: 9b74451f8217e1f4ca4ad051ec604536, type: 3}
+      propertyPath: PS
+      value: 
+      objectReference: {fileID: 1602880585}
     - target: {fileID: 889710874940546237, guid: 9b74451f8217e1f4ca4ad051ec604536, type: 3}
       propertyPath: botWalls.Array.data[0]
       value: 
