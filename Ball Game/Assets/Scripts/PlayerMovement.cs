@@ -52,11 +52,19 @@ public class PlayerMovement : MonoBehaviour
     public Animator VCAnim;
 
     public ParticleSystem PS;
+    public SaveVariables SV;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb.AddForce(gameObject.transform.forward * 50, ForceMode.VelocityChange);
+        if(SV.sceneIndex == 0)
+        {
+            rb.AddForce(gameObject.transform.forward * 50, ForceMode.VelocityChange);
+        }
+        else if(SV.sceneIndex == 1)
+        {
+            rb.AddForce(gameObject.transform.forward * 75, ForceMode.VelocityChange);
+        }
     }
 
     // Update is called once per frame

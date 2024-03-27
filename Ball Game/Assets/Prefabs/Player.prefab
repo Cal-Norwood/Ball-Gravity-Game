@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 7598424836447628878}
   - component: {fileID: 8471302218551914639}
   - component: {fileID: 889710874940546237}
+  - component: {fileID: 4397751466967355845}
+  - component: {fileID: 2730817460388589673}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -197,6 +199,38 @@ MonoBehaviour:
   VC: {fileID: 2352586142752935242}
   VCAnim: {fileID: 4387320811238753753}
   PS: {fileID: 0}
+--- !u!114 &4397751466967355845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562372540843133011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8a58389a001b9d419ebecb657da1918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealthState: 0
+  sSwitch: {fileID: 0}
+  VCAnim: {fileID: 4387320811238753753}
+  progressBar: {fileID: 0}
+  onLastChance: 0
+  originalProgressColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &2730817460388589673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562372540843133011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4a1dee0d557543baeee76c97e1e39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SV: {fileID: 11400000, guid: e5386403ec54a474ebf91ef383fcc90c, type: 2}
+  coinText: {fileID: 0}
 --- !u!1 &3530361596971039350
 GameObject:
   m_ObjectHideFlags: 0
