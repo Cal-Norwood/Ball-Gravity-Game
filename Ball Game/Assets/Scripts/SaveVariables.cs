@@ -9,6 +9,7 @@ public class SaveVariables : ScriptableObject
     public string currentScene;
     public string[] Scenes;
     public int coinAmount = 0;
+    public bool isMusicPlaying = false;
 
     // Start is called before the first frame update
     void OnEnable()
@@ -16,6 +17,7 @@ public class SaveVariables : ScriptableObject
         coinAmount = 0;
         sceneIndex = 0;
         currentScene = Scenes[0];
+        isMusicPlaying = false;
     }
 
     // Update is called once per frame
