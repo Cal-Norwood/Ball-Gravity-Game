@@ -7,6 +7,10 @@ using TMPro;
 public class CoinPickup : MonoBehaviour
 {
     public GameObject Player;
+
+    public bool magnetActive = false;
+    public bool inMagnetRadius = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,12 +20,28 @@ public class CoinPickup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    
+        if (magnetActive == true && inMagnetRadius == true)
+        {
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, Player.transform.position, 0.5f);
+        }
+    }
+
+    public void ActivateBool()
+    {
+        magnetActive = true;
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        Player.BroadcastMessage("CoinPickup");
-        Destroy(gameObject);
+        if(other.GetType() == typeof(SphereCollider))
+        {
+            inMagnetRadius = true;
+        }
+
+        if (other.GetType() == typeof(MeshCollider))
+        {
+            Player.BroadcastMessage("CoinPickup");
+            Destroy(gameObject);
+        }
     }
 }

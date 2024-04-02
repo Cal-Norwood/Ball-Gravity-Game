@@ -359,6 +359,7 @@
 "Assets/Scripts/HealthHandler.cs"
 "Assets/Scripts/HitHandler.cs"
 "Assets/Scripts/LevelProgressDisplay.cs"
+"Assets/Scripts/MagnetMechanic.cs"
 "Assets/Scripts/PlayBetweenScene.cs"
 "Assets/Scripts/PlayerMovement.cs"
 "Assets/Scripts/RotatingMovement.cs"

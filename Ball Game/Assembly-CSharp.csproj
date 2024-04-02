@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\SaveVariables.cs" />
     <Compile Include="Assets\Scripts\RotatingMovement.cs" />
+    <Compile Include="Assets\Scripts\MagnetMechanic.cs" />
     <Compile Include="Assets\Scripts\PlayBetweenScene.cs" />
     <Compile Include="Assets\Scripts\SceneSwitch.cs" />
     <Compile Include="Assets\Scripts\HealthHandler.cs" />
